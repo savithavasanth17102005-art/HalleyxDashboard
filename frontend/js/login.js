@@ -50,7 +50,7 @@ window.register = async function(){
     let data = await response.json();
 
     if(data.success){
-      localStorage.setItem("userName", data.user.name);
+      localStorage.setItem("userName", name);
       alert("Registered successfully!");
       closeRegister();
     }else{

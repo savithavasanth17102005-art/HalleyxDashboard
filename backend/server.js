@@ -7,7 +7,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-let loggedInUser = null;
+
 
 const db = mysql.createConnection({
   host: "localhost",
@@ -97,7 +97,7 @@ app.post("/login", (req, res) => {
         return res.json({ success:false, message:"Wrong role selected" });
       }
 
-      loggedInUser = user;   
+      
 
 res.json({
   success:true,
@@ -187,7 +187,7 @@ app.get("/dashboard-data", (req, res) => {
   
   const revenueQuery = "SELECT SUM(total) AS totalRevenue FROM orders";
 
-  
+
   const productQuery = `
     SELECT product, SUM(quantity) AS totalQty
     FROM orders
@@ -228,15 +228,7 @@ app.get("/dashboard-data", (req, res) => {
   });
 
 });
-app.get("/current-user", (req, res) => {
 
-  if(loggedInUser){
-    res.json({ name: loggedInUser.name });
-  }else{
-    res.json({ name: "Admin" });
-  }
-
-});
 
 app.listen(3000, ()=>{
   console.log("Server running on port 3000");
