@@ -43,6 +43,11 @@ app.post("/register", (req, res) => {
   
   db.query("SELECT * FROM users WHERE email = ?", [email], (err, result) => {
 
+    if(err){
+      console.log("Query Error:", err);
+      return res.json({ success:false, message:"DB error" });
+    }
+
     if(result.length > 0){
       return res.json({ success:false, message:"Email already exists" });
     }
