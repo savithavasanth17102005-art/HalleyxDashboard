@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Dashboard</title>
+<style>
+  body, html {
+    margin:0; padding:0; font-family: 'Segoe UI', sans-serif; background: #a8e2f5; min-height:100vh;
+  }
+  .topbar {
+  background: rgba(255,255,255,0.3);
+  backdrop-filter: blur(10px);
+  height: 80px;
+
+  display: flex;
+  align-items: center;  
+  justify-content: center;
+
+  padding: 0 30px;
+  font-size: 22px;
+  font-weight: 600;
+  color: #034f84;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+
+  position: relative; 
+}
+  .content {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .product-card {
+    background: rgba(255,255,255,0.6);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    opacity: 0;
+    transform: translateY(30px);
+    animation: slideIn 0.5s forwards;
+  }
+  .product-card:nth-child(1) { animation-delay: 0.1s; }
+  .product-card:nth-child(2) { animation-delay: 0.3s; }
+  .product-card:nth-child(3) { animation-delay: 0.5s; }
+  .product-card:nth-child(4) { animation-delay: 0.7s; }
+  .product-card:nth-child(5) { animation-delay: 0.9s; }
+
+  .product-card h2 { margin:0; color:#034f84; }
+  .product-card p { margin:5px 0 0 0; flex:1; }
+  .product-card button {
+     padding:10px 18px;
+  border:none;
+  background: linear-gradient(135deg,#54bd95,#0ea5e9);
+  color:white;
+  border-radius:6px;
+  cursor:pointer;
+  font-weight:600;
+  transition:0.3s;
+  box-shadow:0 3px 8px rgba(0,0,0,0.2);
+  }
+  .product-card button:hover {  transform: scale(1.05); }
+
+
+button{
+  padding:10px 18px;
+  border:none;
+  background: linear-gradient(135deg,#54bd95,#0ea5e9);
+  color:white;
+  border-radius:6px;
+  cursor:pointer;
+  font-weight:600;
+  transition:0.3s;
+  box-shadow:0 3px 8px rgba(0,0,0,0.2);
+}
+
+button:hover{
+  transform:scale(1.05);
+  box-shadow:0 5px 12px rgba(0,0,0,0.3);
+}
+
+.logout-btn{
+  position: absolute;
+  left: 20px;
+}
+ 
+
+  @keyframes slideIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  
+.product-card{
+  position:relative;
+  overflow:hidden;
+}
+
+.product-card::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:-75%;
+  width:50%;
+  height:100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.6),
+    transparent
+  );
+  transform: skewX(-25deg);
+}
+
+
+.product-card:hover::before{
+  animation: shine 0.8s forwards;
+}
+
+@keyframes shine{
+  0%{
+    left:-75%;
+  }
+  100%{
+    left:125%;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<div class="topbar">
+
+  <button class="logout-btn" onclick="goLogin()">← Logout</button>
+
+  <h3 id="topbar" class="center-text">Welcome, User!</h3>
+
+</div>
+<div class="content" id="productList"></div>
+
+<script>
+  const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+  if(currentUser.name) document.getElementById('topbar').innerText = `Welcome, ${currentUser.name}!`;
+
+  const products = [
+    {
+      name: "Fiber Internet 300 Mbps",
+      description: "High-speed internet with 300 Mbps bandwidth.",
+      details: "Ideal for small households. Supports streaming, gaming, and multiple devices simultaneously."
+    },
+    {
+      name: "5G Unlimited Mobile Plan",
+      description: "Unlimited mobile data with 5G speed.",
+      details: "Perfect for heavy mobile users. Includes unlimited calls and SMS."
+    },
+    {
+      name: "Fiber Internet 1 Gbps",
+      description: "Ultra-fast internet with 1 Gbps bandwidth.",
+      details: "For large households or small businesses needing lightning-fast connectivity."
+    },
+    {
+      name: "Business Internet 500 Mbps",
+      description: "Reliable business-grade internet.",
+      details: "Optimized for office use, supports video conferencing and cloud services."
+    },
+    {
+      name: "VoIP Corporate Package",
+      description: "Professional voice-over-IP package.",
+      details: "Includes multiple extensions, call forwarding, and conference features."
+    }
+  ];
+
+  const container = document.getElementById('productList');
+  products.forEach((p, idx) => {
+    const div = document.createElement('div');
+    div.className = 'product-card';
+    div.innerHTML = `
+      <div>
+        <h2>${p.name}</h2>
+        <p>${p.description}</p>
+      </div>
+      <button onclick="viewDetails(${idx})">Details</button>
+    `;
+    container.appendChild(div);
+  });
+
+  function viewDetails(index){
+    
+    localStorage.setItem('selectedProduct', JSON.stringify(products[index]));
+    window.location.href = 'detail.html';
+
+  }
+
+  function goLogin(){
+  localStorage.removeItem("currentUser");
+  window.location.href = "login.html";
+}
+</script>
+
+</body>
+</html>
+

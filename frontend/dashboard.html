@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Dashboard</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+
+
+<div class="topbar">
+
+
+<div>
+  <button onclick="goBack()">← Back</button>
+</div>
+
+
+<div class="welcome">
+  <h3 id="welcomeName">Welcome Admin</h3>
+</div>
+
+
+<div>
+  <button onclick="showDashboard()">📊 Dashboard</button>
+  <button onclick="showOrders()">🛒 Customer Orders</button>
+</div>
+
+</div>
+
+
+<div id="dashboardView">
+
+<div class="dashboard-controls">
+
+<div>
+<span>Show data for</span>
+
+<select onchange="filterData(this.value)">
+  <option value="all">All Time</option>
+  <option value="today">Today</option>
+  <option value="7days">Last 7 Days</option>
+  <option value="30days">Last 30 Days</option>
+  <option value="90days">Last 90 Days</option>
+</select>
+</div>
+
+<button onclick="openConfig()">⚙ Configure Dashboard</button>
+
+</div>
+
+
+
+<div id="dashboardWidgets"></div>
+
+
+
+<div class="empty-dashboard" id="emptyDashboard">
+
+<h3>No widgets configured</h3>
+
+<p>
+Click "Configure Dashboard" to create your personalized dashboard
+</p>
+
+<button class="config-btn" onclick="openConfig()">
+  ⚙ Configure Dashboard
+</button>
+
+</div>
+
+</div>
+
+
+
+
+<div id="configView" style="display:none">
+
+<div class="config-header">
+
+<div class="config-left">
+
+<button onclick="closeConfig()">← Back</button>
+
+<button onclick="toggleSidebar()">☰ Widgets</button>
+
+</div>
+
+<h3>Configure Dashboard</h3>
+
+<button onclick="window.saveDashboard()">💾 Save Configuration</button>
+
+</div>
+
+<div class="main">
+
+
+
+<div class="sidebar" id="sidebar">
+
+<h3>Widgets</h3>
+
+<div class="widget-item" draggable="true" data-type="Bar Chart">📊 Bar Chart</div>
+<div class="widget-item" draggable="true" data-type="Line Chart">📈 Line Chart</div>
+<div class="widget-item" draggable="true" data-type="Pie Chart">🥧 Pie Chart</div>
+<div class="widget-item" draggable="true" data-type="Table">📋 Table</div>
+<div class="widget-item" draggable="true" data-type="KPI value">🔢 KPI Value</div>
+
+</div>
+
+
+
+<div class="canvas" id="canvas">
+
+<div class="placeholder" id="placeholder">
+
+Drag widgets from the left panel to build your dashboard
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script src="js/dashboard.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+
+  fetch("http://localhost:3000/current-user")
+    .then(res => res.json())
+    .then(user => {
+      console.log("USER:", user);
+
+      if(user && user.name){
+        document.getElementById("welcomeName").innerText = "Welcome, " + user.name;
+      }
+    })
+    .catch(err => {
+      console.error("Error:", err);
+    });
+
+});
+</script>
+
+<div class="settings-panel" id="settingsPanel">
+
+<div class="settings-header">
+
+<h3>Widget Settings</h3>
+
+<span onclick="closeSettings()">✖</span>
+
+</div>
+
+<div class="settings-body">
+
+<label>Widget title *</label>
+<input type="text" id="widgetTitle">
+
+<label>Widget type</label>
+<input type="text" id="widgetType" readonly>
+
+<label>Description</label>
+<textarea id="widgetDesc"></textarea>
+
+<h4 style="color:#2bb673">Widget Size</h4>
+
+<div style="display:flex; gap:10px;">
+<div style="flex:1;">
+<label>Width (Columns) *</label>
+<input type="number" id="widgetWidth" min="400">
+</div>
+
+<div style="flex:1;">
+<label>Height (Rows) *</label>
+<input type="number" id="widgetHeight" min="550">
+</div>
+</div>
+
+<h4 style="color:#2bb673">Data Setting</h4>
+
+<label>Choose X-Axis data *</label>
+<select id="xAxis">
+<option value="">Select</option>
+<option value="product">Product</option>
+<option value="quantity">Quantity</option>
+<option value="price">Unit price</option>
+<option value="total">Total amount</option>
+<option value="status">Status</option>
+<option value="user">Created by</option>
+<option value="duration">Duration</option>
+</select>
+
+<label>Choose Y-Axis data *</label>
+<select id="yAxis">
+<option value="">Select</option>
+<option value="quantity">Quantity</option>
+<option value="price">Unit price</option>
+<option value="total">Total amount</option>
+<option value="duration">Duration</option>
+</select>
+
+<h4 style="color:#2bb673">Styling</h4>
+
+<label>Chart color</label>
+
+<div class="color-picker-wrapper">
+
+<input type="color" id="chartColor" value="#54bd95">
+
+<input type="text" id="colorHex" value="#54bd95">
+
+</div>
+
+<button onclick="window.saveWidgetSettings()">Save</button>
+
+</div>
+
+</div>
+
+</body>
+
+</html>
+

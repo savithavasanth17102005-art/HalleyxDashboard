@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+
+<div class="ocean-bg">
+
+ <div class="rain" id="rain"></div>
+
+  
+  <div class="wave wave1"></div>
+  <div class="wave wave2"></div>
+  <div class="wave wave3"></div>
+
+  
+  <div class="portal-container">
+    <h1>Halleyx DashCore</h1>
+
+    <div class="role-switch">
+      <button id="userBtn" onclick="selectRole('user')" class="active">User</button>
+      <button id="adminBtn" onclick="selectRole('admin')">Admin</button>
+    </div>
+
+    <div class="login-card">
+      <h2 id="roleTitle">User Login</h2>
+      <input id="email" placeholder="Email">
+      <input id="password" type="password" placeholder="Password">
+
+      <div class="login-buttons">
+        <button onclick="login()">Login</button>
+        <button onclick="openRegister()">Register</button>
+      </div>
+      <div id="loginError" class="error-msg"></div>
+    </div>
+  </div>
+</div>
+
+
+<div id="registerPopup" class="popup">
+  <div class="popup-box">
+    <h2>Register</h2>
+    <input id="regEmail" placeholder="Email">
+    <input id="regPassword" type="password" placeholder="Password">
+    <input id="regName" placeholder="Full Name">
+    <button onclick="register()">Submit</button>
+    <button onclick="closeRegister()">Cancel</button>
+    <div id="registerError" class="error-msg"></div>
+  </div>
+</div>
+
+<script src="js/login.js">
+  
+</script>
+<script>
+const rainContainer = document.getElementById("rain");
+
+for(let i=0; i<120; i++){
+
+  let drop = document.createElement("div");
+  drop.className = "drop";
+
+  drop.style.left = Math.random() * 100 + "vw";
+  drop.style.animationDuration = (0.5 + Math.random()) + "s";
+  drop.style.opacity = Math.random();
+
+  rainContainer.appendChild(drop);
+
+  
+}
+</script>
+</body>
+</html>

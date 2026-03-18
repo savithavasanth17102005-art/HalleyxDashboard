@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Details</title>
+<style>
+  body, html {
+    margin:0; padding:0;
+    font-family: 'Segoe UI', sans-serif;
+    min-height:100vh;
+    background: #b7e8f9;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+  }
+
+  .topbar {
+    background: rgba(255,255,255,0.25);
+    backdrop-filter: blur(8px);
+    padding: 18px 25px;
+    font-size: 22px;
+    font-weight: 600;
+    color: #034f84;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    text-align: center;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 10;
+  }
+
+  .detail-container {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    width: 100%;
+    height: 100vh;
+    animation: fadeInUp 0.7s ease forwards;
+  }
+
+  .detail-card {
+    background: rgba(255,255,255,0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 14px;
+    padding: 40px 30px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    display:flex;
+    flex-direction: column;
+    gap: 20px;
+    text-align:center;
+    transform: translateY(40px);
+    opacity: 0;
+    transition: all 0.5s ease;
+  }
+
+  .detail-card.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  h2 {
+    color: #034f84;
+    margin: 0;
+    font-size: 28px;
+  }
+
+  p {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #034f84;
+  }
+
+  .price {
+    font-size: 20px;
+    font-weight: 600;
+    color: #0ea5e9;
+  }
+
+  .btn-group {
+    display:flex;
+    gap: 15px;
+    justify-content:center;
+    flex-wrap: wrap;
+    margin-top:10px;
+  }
+
+  button {
+     padding:10px 18px;
+  border:none;
+  background: linear-gradient(135deg,#54bd95,#0ea5e9);
+  color:white;
+  border-radius:6px;
+  cursor:pointer;
+  font-weight:600;
+  transition:0.3s;
+  box-shadow:0 3px 8px rgba(0,0,0,0.2);
+  }
+
+  button:hover {
+   
+    transform: scale(1.05);
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  
+.detail-card{
+  position:relative;
+  animation: floatCard 4s ease-in-out infinite;
+}
+
+
+.detail-card::after{
+  content:"";
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:120%;
+  height:120%;
+  background: radial-gradient(circle, rgba(255,255,255,0.25), transparent 70%);
+  transform: translate(-50%,-50%);
+  z-index:-1;
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+
+@keyframes floatCard{
+  0%{ transform:translateY(0px); }
+  50%{ transform:translateY(-12px); }
+  100%{ transform:translateY(0px); }
+}
+
+
+@keyframes glowPulse{
+  0%{ opacity:0.4; transform:translate(-50%,-50%) scale(1); }
+  50%{ opacity:0.7; transform:translate(-50%,-50%) scale(1.1); }
+  100%{ opacity:0.4; transform:translate(-50%,-50%) scale(1); }
+}
+
+
+.particles{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  z-index:-1;
+}
+
+
+.particle{
+  position:absolute;
+  width:8px;
+  height:8px;
+  background:rgba(255,255,255,0.5);
+  border-radius:50%;
+  animation: floatUp linear infinite;
+}
+
+
+@keyframes floatUp{
+  from{
+    transform:translateY(100vh);
+    opacity:0;
+  }
+  to{
+    transform:translateY(-10vh);
+    opacity:1;
+  }
+}
+</style>
+</head>
+<body>
+<div class="particles" id="particles"></div>
+<div class="topbar">Product Details</div>
+
+<div class="detail-container">
+  <div class="detail-card" id="card">
+    <h2 id="productName">Product Name</h2>
+    <p id="productDescription">Description of the product goes here.</p>
+    <p class="price" id="productPrice">$0</p>
+    <div class="btn-group">
+      <button onclick="placeOrder()">Place Order</button>
+      <button onclick="goBack()">Back</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  
+  const products = [
+    {name: "Fiber Internet 300 Mbps", description: "High-speed internet for streaming and gaming.", price: 49.99},
+    {name: "5G Unlimited Mobile Plan", description: "Unlimited mobile data with 5G speed.", price: 69.99},
+    {name: "Fiber Internet 1 Gbps", description: "Ultra-fast internet for households or offices.", price: 99.99},
+    {name: "Business Internet 500 Mbps", description: "Reliable business-grade internet.", price: 79.99},
+    {name: "VoIP Corporate Package", description: "Professional VoIP service.", price: 59.99}
+  ];
+
+  const product = JSON.parse(localStorage.getItem('selectedProduct') || '{}');
+  if(product.name){
+    const prod = products.find(p=>p.name===product.name);
+    document.getElementById('productName').innerText = prod.name;
+    document.getElementById('productDescription').innerText = prod.description;
+    document.getElementById('productPrice').innerText = `$${prod.price.toFixed(2)}`;
+  }
+
+  const card = document.getElementById('card');
+  setTimeout(()=>{ card.classList.add('show'); }, 100);
+
+  function placeOrder(){
+    localStorage.setItem('orderProduct', JSON.stringify(product));
+    window.location.href = 'orders.html';
+  }
+
+  function goBack(){ window.history.back(); }
+
+ 
+const container = document.getElementById("particles");
+
+for(let i=0; i<40; i++){
+
+  let p = document.createElement("div");
+  p.className = "particle";
+
+  p.style.left = Math.random()*100 + "vw";
+  p.style.animationDuration = (4 + Math.random()*4) + "s";
+  p.style.opacity = Math.random();
+
+  container.appendChild(p);
+}
+
+</script>
+
+</body>
+</html>
